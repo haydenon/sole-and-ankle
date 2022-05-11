@@ -5,6 +5,45 @@ import { COLORS, WEIGHTS } from "../../constants";
 import { formatPrice, pluralize, isNewShoe } from "../../utils";
 import Spacer from "../Spacer";
 
+const FlagItem = styled.div`
+  position: absolute;
+  top: 12px;
+  right: -4px;
+
+  padding: 8px;
+  line-height: 1rem;
+  color: ${COLORS.white};
+  background-color: ${(props) => props.color};
+  border-radius: 2px;
+`;
+
+const Flag = ({ variant }) => {
+  if (!variant || variant === "default") {
+    return null;
+  }
+  const text = (() => {
+    switch (variant) {
+      case "on-sale":
+        return "Sale";
+      case "new-release":
+      default:
+        return "Just Released!";
+    }
+  })();
+
+  const color = () => {
+    switch (variant) {
+      case "on-sale":
+        return COLORS.primary;
+      case "new-release":
+      default:
+        return COLORS.secondary;
+    }
+  };
+
+  return <FlagItem color={color}>{text}</FlagItem>;
+};
+
 const ShoeCard = ({
   slug,
   name,
@@ -25,11 +64,12 @@ const ShoeCard = ({
   // both on-sale and new-release, but in this case, `on-sale`
   // will triumph and be the variant used.
   // prettier-ignore
-  const variant = typeof salePrice === 'number'
-    ? 'on-sale'
+  const isOnSale = typeof salePrice === 'number';
+  const variant = isOnSale
+    ? "on-sale"
     : isNewShoe(releaseDate)
-      ? 'new-release'
-      : 'default'
+    ? "new-release"
+    : "default";
 
   return (
     <Link href={`/shoe/${slug}`}>
@@ -40,11 +80,13 @@ const ShoeCard = ({
         <Spacer size={12} />
         <Row>
           <Name>{name}</Name>
-          <Price>{formatPrice(price)}</Price>
+          <Price onSale={isOnSale}>{formatPrice(price)}</Price>
         </Row>
         <Row>
           <ColorInfo>{pluralize("Color", numOfColors)}</ColorInfo>
+          {isOnSale ? <SalePrice>{formatPrice(salePrice)}</SalePrice> : null}
         </Row>
+        <Flag variant={variant} />
       </Wrapper>
     </Link>
   );
@@ -56,7 +98,9 @@ const Link = styled.a`
   color: inherit;
 `;
 
-const Wrapper = styled.article``;
+const Wrapper = styled.article`
+  position: relative;
+`;
 
 const ImageWrapper = styled.div`
   position: relative;
@@ -78,7 +122,9 @@ const Name = styled.h3`
   color: ${COLORS.gray[900]};
 `;
 
-const Price = styled.span``;
+const Price = styled.span`
+  text-decoration: ${(props) => (props.onSale ? "line-through" : "initial")};
+`;
 
 const ColorInfo = styled.p`
   color: ${COLORS.gray[700]};
