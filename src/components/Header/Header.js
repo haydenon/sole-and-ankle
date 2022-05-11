@@ -43,6 +43,7 @@ const MainHeader = styled.div`
   align-items: baseline;
   padding: 16px 32px 14px;
   border-bottom: 1px solid ${COLORS.gray[300]};
+  gap: 48px;
 `;
 
 const Nav = styled.nav`
