@@ -7,6 +7,10 @@ import SearchInput from "../SearchInput";
 import UnstyledButton from "../UnstyledButton";
 import Icon from "../Icon";
 
+const WrappedButton = styled(UnstyledButton)`
+  align-self: center;
+`;
+
 const SuperHeader = () => {
   return (
     <Wrapper>
@@ -15,17 +19,19 @@ const SuperHeader = () => {
       </MarketingMessage>
       <SearchInput />
       <HelpLink href="/help">Help</HelpLink>
-      <UnstyledButton>
+      <WrappedButton>
         <Icon id="shopping-bag" strokeWidth={1} />
-      </UnstyledButton>
+      </WrappedButton>
     </Wrapper>
   );
 };
 
 const Wrapper = styled.div`
-  padding: 12px 32px;
   display: flex;
+  align-items: baseline;
   gap: 24px;
+
+  padding: 12px 32px;
   font-size: 0.875rem;
   color: ${COLORS.gray[300]};
   background-color: ${COLORS.gray[900]};
